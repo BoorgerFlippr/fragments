@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const passport = require('passport');
+const authenticate = require('./auth');
 
 //const { author, version } = require('../package.json');
 
@@ -14,6 +16,10 @@ app.use(pino);
 app.use(helmet());
 app.use(cors());
 app.use(compression());
+
+//setup passport authentication middleware
+passport.use(authenticate.strategy());
+app.use(passport.initialize());
 
 //define our routes
 app.use('/', require('./routes'));
