@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 
-const { author, version } = require('../package.json');
+//const { author, version } = require('../package.json');
 
 const logger = require('./logger');
 const pino = require('pino-http')({ logger });
@@ -15,15 +15,8 @@ app.use(helmet());
 app.use(cors());
 app.use(compression());
 
-app.get('/', (req, res) => {
-  res.setHeader('CAche-control', 'no-cache');
-  res.status(200).json({
-    status: 'ok',
-    author,
-    githubUrl: 'https://github.com/BoorgerFlippr/fragments',
-    version,
-  });
-});
+//define our routes
+app.use('/', require('./routes'));
 
 app.use((req, res) => {
   res.status(404).json({
