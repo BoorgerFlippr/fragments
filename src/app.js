@@ -8,6 +8,7 @@ const authenticate = require('./auth');
 //const { author, version } = require('../package.json');
 
 const logger = require('./logger');
+const { createErrorResponse } = require('./response');
 const pino = require('pino-http')({ logger });
 
 const app = express();
@@ -25,13 +26,17 @@ app.use(passport.initialize());
 app.use('/', require('./routes'));
 
 app.use((req, res) => {
-  res.status(404).json({
-    status: 'error',
-    error: {
-      message: 'not found',
-      code: 404,
-    },
-  });
+  //res.status(404).json({
+  //status: 'error',
+  //error: {
+  //message: 'not found',
+  //code: 404,
+  //},
+  //});
+
+  const errResponse = createErrorResponse(404, 'found');
+  res.status(404);
+  res.json(errResponse);
 });
 
 //eslint-disable-next-line no-unused-vars
