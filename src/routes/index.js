@@ -34,12 +34,14 @@ router.get('/', (req, res) => {
   //});
 
   const data = {
-    author: author,
-    version: version,
+    status: 'ok',
+    author,
     githubUrl: 'https://github.com/BoorgerFlippr/fragments',
+    version,
   };
-
-  res.status(200)(createSuccessResponse(data));
+  const successResponse = createSuccessResponse(data);
+  res.status(200);
+  res.json(successResponse);
 });
 
 module.exports = router;
