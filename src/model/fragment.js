@@ -1,3 +1,5 @@
+// src/model/fragments.js
+
 // Use crypto.randomUUID() to create unique IDs, see:
 // https://nodejs.org/api/crypto.html#cryptorandomuuidoptions
 const { randomUUID } = require('crypto');
@@ -126,25 +128,19 @@ class Fragment {
    * Saves the current fragment to the database
    * @returns Promise<void>
    */
-  async save() {
+  save() {
     // TODO
     this.updated = new Date().toISOString();
-    await writeFragment(this);
+    return writeFragment(this);
   }
 
   /**
    * Gets the fragment's data from the database
    * @returns Promise<Buffer>
    */
-  async getData() {
+  getData() {
     // TODO
-    const buffer = await readFragmentData(this.ownerId, this.id);
-
-    if (!buffer) {
-      throw new Error(`Data for fragment does not exist`);
-    }
-
-    return buffer;
+    return readFragmentData(this.ownerId, this.id);
   }
 
   /**
