@@ -1,5 +1,3 @@
-//const memory = require('../../src/model/data/memory/index');
-
 const {
   writeFragment,
   readFragment,

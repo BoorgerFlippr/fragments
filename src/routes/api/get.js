@@ -8,12 +8,6 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
  */
 module.exports = async (req, res) => {
   let fragments;
-  /**
-   * const data = { fragments: [] };
-  const successResponse = createSuccessResponse(data);
-  res.status(200);
-  res.json(successResponse);
-   */
 
   try {
     fragments = await Fragment.byUser(req.user);

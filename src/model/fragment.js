@@ -1,9 +1,6 @@
 // src/model/fragments.js
 
-// Use crypto.randomUUID() to create unique IDs, see:
-// https://nodejs.org/api/crypto.html#cryptorandomuuidoptions
 const { randomUUID } = require('crypto');
-// Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 
 // Functions for working with fragment metadata/data using our DB
@@ -21,9 +18,6 @@ const validTypes = [`text/plain`];
 
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
-    // TODO
-    //throw if owner id or if owner id is null
-
     if (id) {
       this.id = id;
     } else {
@@ -35,9 +29,6 @@ class Fragment {
     } else {
       throw new Error('owner id cant be null');
     }
-
-    //make date
-    //const date = new Date('10 October 2023');
 
     const cDate = new Date();
 
@@ -85,7 +76,6 @@ class Fragment {
    * @returns Promise<Array<Fragment>>
    */
   static async byUser(ownerId, expand = false) {
-    // TODO
     const fragments = await listFragments(ownerId, expand);
 
     if (expand) {
@@ -103,7 +93,6 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
-    // TODO
     const fragment = await readFragment(ownerId, id);
 
     if (!fragment) {
@@ -120,7 +109,6 @@ class Fragment {
    * @returns Promise<void>
    */
   static delete(ownerId, id) {
-    // TODO
     return deleteFragment(ownerId, id);
   }
 
@@ -129,7 +117,6 @@ class Fragment {
    * @returns Promise<void>
    */
   save() {
-    // TODO
     this.updated = new Date().toISOString();
     return writeFragment(this);
   }
@@ -139,7 +126,6 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    // TODO
     return readFragmentData(this.ownerId, this.id);
   }
 
@@ -149,7 +135,6 @@ class Fragment {
    * @returns Promise<void>
    */
   async setData(data) {
-    // TODO
     this.size = data.length;
     this.updated = new Date().toISOString();
     await writeFragmentData(this.ownerId, this.id, data);
@@ -170,7 +155,6 @@ class Fragment {
    * @returns {boolean} true if fragment's type is text/*
    */
   get isText() {
-    // TODO
     return this.type.includes('text/');
   }
 
@@ -179,7 +163,6 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    // TODO
     return validTypes;
   }
 
@@ -189,7 +172,6 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    // TODO
     return validTypes.includes(contentType.parse(value).type);
   }
 }

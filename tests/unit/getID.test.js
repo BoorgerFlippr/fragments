@@ -9,7 +9,6 @@ beforeAll(async () => {
     .set({ 'Content-Type': 'text/plain' })
     .send('This is a test');
 
-  // /v1/fragments returns a buffer
   logger.debug({ createRes }, 'create res');
   fragmentData = JSON.parse(createRes.text).fragment.id;
   logger.debug({ fragmentData }, 'THIS IS FRAGMENT DATA');
@@ -22,7 +21,6 @@ describe('GET /fragments/:ID', () => {
   });
 
   test('Authenticated users get a fragment returned to them', async () => {
-    // Authenticate the request
     const res = await request(app)
       .get(`/v1/fragments/${fragmentData}`)
       .auth('user1@email.com', 'password1');
