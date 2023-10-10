@@ -9,7 +9,7 @@ describe('POST /v1/fragments', () => {
     const res = await request(app)
       .post('/v1/fragments')
       .auth('user1@email.com', 'password1')
-      .set('Content-Type', 'text/plain')
+      .set({ 'Content-Type': 'text/plain' })
       .send('This is a test');
 
     expect(res.statusCode).toBe(201);

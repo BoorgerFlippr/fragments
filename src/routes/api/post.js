@@ -21,24 +21,27 @@ module.exports = async (req, res) => {
     }
 
     // Create the fragment
-    const newFragment = new Fragment({
+    const fragment = new Fragment({
       ownerId: req.user,
       type: contentTypeHeader, // Use the content type from the header
       size: req.body.byteLength,
     });
 
     // Set data into fragment
-    await newFragment.setData(req.body);
+
+    await fragment.setData(req.body);
+
+    await fragment.save();
 
     // Set up response
-    res.setHeader('Location', `${API_URL}/v1/fragments/${newFragment.id}`);
-    res.setHeader('Content-Type', newFragment.type);
+    res.setHeader('Location', `${API_URL}/v1/fragments/${fragment.id}`);
+    res.setHeader('Content-Type', fragment.type);
 
-    const data = { fragments: newFragment };
+    logger.error({ fragment }, 'CREATED FRAGMENT');
+    const response = createSuccessResponse({ fragment });
+    logger.debug({ response }, 'RESPONSE FROM POST');
 
-    logger.error({ newFragment }, 'CREATED FRAGMENT');
-
-    return res.status(201).json(createSuccessResponse({ data }));
+    return res.status(201).json(response);
   } catch (err) {
     // Catch error
     logger.error(err);
