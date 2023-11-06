@@ -31,7 +31,7 @@ WORKDIR /app
 
 EXPOSE 8080
 
-CMD npm start
+CMD ["npm", "start"]
 
 HEALTHCHECK --interval=3m \
       CMD curl --fail http://localhost:8080/ || exit 1

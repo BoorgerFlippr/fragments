@@ -42,6 +42,7 @@
     "pino": "^8.15.1",
     "pino-http": "^8.5.0",
     "pino-pretty": "^10.2.0",
+    "scoop": "^0.0.2",
     "stoppable": "^1.1.0"
   }
 }
