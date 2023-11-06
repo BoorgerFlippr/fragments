@@ -55,7 +55,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry}}
           ECR_REPO: fragments
           VERSION_TAG: ${{ github.ref_name }}
-        uses: docker/build-push-actions@v4
+        uses: docker/build-push-action@v4
         with:
           push: true
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}, ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
