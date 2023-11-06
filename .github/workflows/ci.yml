@@ -66,3 +66,31 @@ jobs:
 
       - name: Install node dependencies and run Tests
         run: npm install-ci-test
+
+  docker-hub:
+    name: Build and Push to Docker Hub
+    #this job wont run if the other three dont pass
+    needs: [lint, dockerfile-lint, unit-tests]
+    runs-on: ubuntu-latest
+    steps:
+      #setup buildx for optimal Docker Builds
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      #login to Docker Hub using GitHub secrets, see:
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        env:
+          #define an env variable with out Doker Hub Repo
+          DOCKERHUB_REPO: gparreno/fragments
+          #define and environment variable with the current git commit's
+          SHA_TAG: sha-${{ github.sha }}
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ env.DOCKERHUB_REPO }}:${{ env.SHA_TAG }}, ${{env.DOCKERHUB_REPO}}:main, ${{ env.DOCKERHUB_REPO}}:latest
