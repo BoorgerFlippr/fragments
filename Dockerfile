@@ -2,7 +2,7 @@
 
 # Stage 1 : Build Node.js application
 
-FROM node:16.13.2-alpine3.14@sha256:d5ff6716e21e03983f8522b6e84f15f50a56e183085553e96d2801fc45dc3c74 as builder
+FROM node:18.13.0-alpine3.14@sha256:d5ff6716e21e03983f8522b6e84f15f50a56e183085553e96d2801fc45dc3c74 as builder
 
 LABEL maintainer="Glenn Parreno <gparreno@myseneca.ca>"
 LABEL description="Fragments node.js microservice"
@@ -23,7 +23,7 @@ COPY ./tests/.htpasswd ./tests/.htpasswd
 
 # STAGE 2 : Create lightweight image
 
-FROM node:16.13.2-alpine3.14@sha256:d5ff6716e21e03983f8522b6e84f15f50a56e183085553e96d2801fc45dc3c74
+FROM node:18.13.0-alpine3.14@sha256:d5ff6716e21e03983f8522b6e84f15f50a56e183085553e96d2801fc45dc3c74
 
 COPY --from=builder /app /app
 
