@@ -2,20 +2,20 @@
 
 const { randomUUID } = require('crypto');
 const contentType = require('content-type');
+var md = require('markdown-it')();
 
 // Functions for working with fragment metadata/data using our DB
 const {
   readFragment,
   writeFragment,
   readFragmentData,
-  //writeFragmentData,
   listFragments,
   deleteFragment,
   writeFragmentData,
 } = require('./data');
+const logger = require('../logger');
 
-const validTypes = [`text/plain`];
-
+const validTypes = [`text/plain`, `text/markdown`, `text/html`];
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
     if (id) {
@@ -173,6 +173,30 @@ class Fragment {
    */
   static isSupportedType(value) {
     return validTypes.includes(contentType.parse(value).type);
+  }
+
+  async convertData(buffer, ext, fragment) {
+    logger.debug('in convert function');
+    let data;
+
+    //convert to html
+    if (ext === 'html' && fragment.mimeType.startsWith('text/')) {
+      logger.debug('inside if function');
+
+      data = buffer;
+      logger.debug({ data }, 'buffer stored in data');
+
+      logger.debug({ data }, 'before md render');
+
+      try {
+        data = md.render(data.toString('utf-8'));
+        logger.debug({ data }, 'after md render');
+      } catch (error) {
+        logger.error(error);
+      }
+    }
+
+    return data;
   }
 }
 

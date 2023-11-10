@@ -10,8 +10,16 @@ module.exports = async (req, res) => {
   let fragments;
 
   try {
-    fragments = await Fragment.byUser(req.user);
-    const sRes = createSuccessResponse({ fragments });
+    const expand = req.query.expand;
+    var sRes;
+
+    if (expand === 1) {
+      fragments = await Fragment.byUser(req.user, true);
+      sRes = await createSuccessResponse({ fragments });
+    } else {
+      fragments = await Fragment.byUser(req.user);
+      sRes = createSuccessResponse({ fragments });
+    }
 
     res.status(200).json(createSuccessResponse(sRes));
   } catch (err) {

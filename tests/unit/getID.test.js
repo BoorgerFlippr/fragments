@@ -7,7 +7,7 @@ beforeAll(async () => {
     .post('/v1/fragments')
     .auth('user1@email.com', 'password1')
     .set({ 'Content-Type': 'text/plain' })
-    .send('This is a test');
+    .send('{"this": "is a test"}');
 
   logger.debug({ createRes }, 'create res');
   fragmentData = JSON.parse(createRes.text).fragment.id;
@@ -23,6 +23,15 @@ describe('GET /fragments/:ID', () => {
   test('Authenticated users get a fragment returned to them', async () => {
     const res = await request(app)
       .get(`/v1/fragments/${fragmentData}`)
+      .auth('user1@email.com', 'password1');
+
+    expect(res.statusCode).toBe(200);
+    logger.debug({ res }, 'TEST RESPONSE');
+  });
+
+  test('Fragments get converted into html', async () => {
+    const res = await request(app)
+      .get(`/v1/fragments/${fragmentData}.html`)
       .auth('user1@email.com', 'password1');
 
     expect(res.statusCode).toBe(200);

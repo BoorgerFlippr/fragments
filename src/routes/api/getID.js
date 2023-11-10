@@ -4,10 +4,37 @@ const { Fragment } = require('../../model/fragment');
 const { createErrorResponse } = require('../../response');
 const logger = require('../../logger');
 
+function extractExt(request) {
+  const idx = request.lastIndexOf('.');
+
+  var ext = '';
+
+  if (idx !== -1 && idx < request.length - 1) {
+    ext = request.substring(idx + 1);
+  }
+
+  return ext;
+}
+
+function removeExt(request) {
+  const idx = request.lastIndexOf('.');
+
+  if (idx !== -1 && idx < request.length - 1) {
+    const withoutExt = request.substring(0, idx);
+    return withoutExt;
+  } else {
+    return request;
+  }
+}
+
 module.exports = async (req, res) => {
   try {
+    //extract ext
+    const ext = extractExt(req.params.id);
+    logger.info({ ext }, 'THIS IS EXTENSION');
+
     //extract fragment ID from req.param
-    const fragID = req.params.id;
+    const fragID = removeExt(req.params.id);
     logger.debug({ fragID }, 'FRAGMENT ID');
 
     //extract owner ID
@@ -30,6 +57,12 @@ module.exports = async (req, res) => {
       logger.debug('Before get data');
       let fData = await fragment.getData();
       logger.debug({ fData }, 'After get data');
+
+      if (ext) {
+        logger.info({ fData }, 'BEFORE CONVERT');
+        fData = await fragment.convertData(fData, ext, fragment);
+        logger.info({ fData }, 'AFTER CONVERT');
+      }
 
       res.setHeader('Content-Length', fragment.size);
 
