@@ -10,10 +10,9 @@ module.exports = async (req, res) => {
   let fragments;
 
   try {
-    const expand = req.query.expand;
     var sRes;
 
-    if (expand === 1) {
+    if (req.query.expand === '1') {
       fragments = await Fragment.byUser(req.user, true);
       sRes = await createSuccessResponse({ fragments });
     } else {

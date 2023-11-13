@@ -15,7 +15,7 @@ const {
 } = require('./data');
 const logger = require('../logger');
 
-const validTypes = [`text/plain`, `text/markdown`, `text/html`];
+const validTypes = [`text/plain`, `text/markdown`, `text/html`, `application/json`];
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
     if (id) {

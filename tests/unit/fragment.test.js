@@ -162,7 +162,12 @@ describe('Fragment class', () => {
         type: 'text/plain; charset=utf-8',
         size: 0,
       });
-      expect(fragment.formats).toEqual(['text/plain', `text/markdown`, `text/html`]);
+      expect(fragment.formats).toEqual([
+        'text/plain',
+        `text/markdown`,
+        `text/html`,
+        `application/json`,
+      ]);
     });
   });
 
