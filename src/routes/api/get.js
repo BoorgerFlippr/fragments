@@ -5,6 +5,7 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
 
 /**
  * Get a list of fragments for the current user
+ *
  */
 module.exports = async (req, res) => {
   let fragments;
