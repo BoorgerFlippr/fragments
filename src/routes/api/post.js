@@ -3,6 +3,7 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
 const logger = require('../../logger');
 
 module.exports = async (req, res) => {
+  logger.debug('in post route');
   const API_URL = process.env.API_URL || req.headers.host;
 
   try {
@@ -16,25 +17,43 @@ module.exports = async (req, res) => {
       return res.status(415).json({ message: 'Unsupported content type' });
     }
 
+    if (Buffer.isBuffer(req.body)) {
+      logger.debug('parsed');
+    } else {
+      return res.status(415).json({ message: 'Unsupported content type (not a buffer)' });
+    }
+
+    const data = req.body;
+
+    logger.debug({ data }, 'this is data');
+
     const fragment = new Fragment({
       ownerId: req.user,
       type: contentTypeHeader,
-      size: req.body.byteLength,
+      size: data.length,
     });
 
-    await fragment.setData(req.body);
+    await fragment.setData(data);
 
     await fragment.save();
+
+    //new Fragment(await Fragment.byId(ownerID, fragID));
+    let nFragment = new Fragment(await Fragment.byId(req.user, fragment.id));
 
     res.setHeader('Location', `${API_URL}/v1/fragments/${fragment.id}`);
     res.setHeader('Content-Type', fragment.type);
 
-    logger.error({ fragment }, 'CREATED FRAGMENT');
+    const n = nFragment.size;
+    logger.debug({ n }, 'THIS IS SIZE');
+    res.setHeader('Content-Length', nFragment.size);
+
+    logger.error({ fragment }, 'CREATED FRAGMENT, look here');
     const response = createSuccessResponse({ fragment });
     logger.debug({ response }, 'RESPONSE FROM POST');
 
     return res.status(201).json(response);
   } catch (err) {
+    logger.debug('look here 1');
     logger.error(err);
     res.status(400).json(createErrorResponse(400, 'Something went wrong: ', err));
   }
