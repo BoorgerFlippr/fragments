@@ -37,7 +37,6 @@ module.exports = async (req, res) => {
 
     await fragment.save();
 
-    //new Fragment(await Fragment.byId(ownerID, fragID));
     let nFragment = new Fragment(await Fragment.byId(req.user, fragment.id));
 
     res.setHeader('Location', `${API_URL}/v1/fragments/${fragment.id}`);
