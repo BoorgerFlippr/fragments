@@ -32,9 +32,10 @@ router.get('/fragments', require('./get'));
 // Other routes will go here later on...
 router.get(['/fragments/:id', '/fragments/:id.html'], require('./getID'));
 
-//assignment 2 routes
 router.get('/fragments/:id/info', require('./getIdInfo'));
 
 router.post('/fragments', rawBody(), require('./post'));
+
+router.delete('/fragments/:id', require('./delete'));
 
 module.exports = router;
