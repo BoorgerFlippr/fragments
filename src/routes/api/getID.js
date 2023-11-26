@@ -70,6 +70,6 @@ module.exports = async (req, res) => {
     }
   } catch (error) {
     logger.error({ error }, 'Error handling request');
-    res.status(500).json(createErrorResponse(500, 'Internal server error'));
+    res.status(404).json(createErrorResponse(404, 'not found'));
   }
 };
