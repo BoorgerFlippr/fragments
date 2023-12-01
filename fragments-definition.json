@@ -53,6 +53,10 @@
         {
           "name": "AWS_S3_BUCKET_NAME",
           "value": "glenn.parreno-fragments"
+        },
+        {
+          "name": "AWS_DYNAMO_TABLE_NAME",
+          "value": "fragments"
         }
       ],
       "resourceRequirements": null,
