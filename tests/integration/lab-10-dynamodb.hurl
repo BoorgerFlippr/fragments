@@ -87,10 +87,10 @@ HTTP/1.1 200
 
 [Asserts]
 jsonpath "$.status" == "ok"
-jsonpath "$.fragments[0]" matches "^[A-Za-z0-9_-]+$"
-jsonpath "$.fragments[0]" == {{fragmentP1_id}}
 jsonpath "$.fragments[1]" matches "^[A-Za-z0-9_-]+$"
-jsonpath "$.fragments[1]" == {{fragmentP2_id}}
+jsonpath "$.fragments[1]" == {{fragmentP1_id}}
+jsonpath "$.fragments[2]" matches "^[A-Za-z0-9_-]+$"
+jsonpath "$.fragments[2]" == {{fragmentP2_id}}
 
 # =============================================================================================================================
 # Delete the first fragment
@@ -121,6 +121,6 @@ HTTP/1.1 200
 
 [Asserts]
 jsonpath "$.status" == "ok"
-jsonpath "$.fragments[0]" matches "^[A-Za-z0-9_-]+$"
-jsonpath "$.fragments[0]" != {{fragmentP1_id}}
-jsonpath "$.fragments[0]" == {{fragmentP2_id}}
+jsonpath "$.fragments[1]" matches "^[A-Za-z0-9_-]+$"
+jsonpath "$.fragments[1]" != {{fragmentP1_id}}
+jsonpath "$.fragments[1]" == {{fragmentP2_id}}
