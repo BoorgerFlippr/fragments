@@ -12,7 +12,6 @@
  *
  * Use .slice(0, 8) if you want reduce the size.
  */
-
 const crypto = require('crypto');
 
 /**
