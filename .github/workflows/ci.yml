@@ -83,7 +83,7 @@ jobs:
       - name: Build Containers
         run: docker compose up -d
       - name: Make local local aws file executable
-        run: chmod +x .scripts/local-aws-setup.sh
+        run: chmod +x ./scripts/local-aws-setup.sh
       - name: Setup Local AWS Resources
         run: ./scripts/local-aws-setup.sh
       - name: Run Hurl Tests
