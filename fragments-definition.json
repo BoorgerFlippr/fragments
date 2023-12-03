@@ -55,7 +55,7 @@
           "value": "glenn.parreno-fragments"
         },
         {
-          "name": "AWS_DYNAMO_TABLE_NAME",
+          "name": "AWS_DYNAMODB_TABLE_NAME",
           "value": "fragments"
         }
       ],
