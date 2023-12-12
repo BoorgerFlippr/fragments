@@ -10,7 +10,10 @@ function extractExt(request) {
   var ext = '';
 
   if (idx !== -1 && idx < request.length - 1) {
-    ext = request.substring(idx + 1);
+    var suffix = request.substring(idx + 1);
+    var prefix = '.';
+
+    ext = prefix.concat(suffix);
   }
 
   return ext;
@@ -24,6 +27,26 @@ function removeExt(request) {
     return withoutExt;
   } else {
     return request;
+  }
+}
+
+function mime(request) {
+  if (request === '.txt') {
+    return 'text/plain';
+  } else if (request === '.md') {
+    return 'text/markdown';
+  } else if (request === '.html') {
+    return 'text/html';
+  } else if (request === '.json') {
+    return 'application/json';
+  } else if (request === '.png') {
+    return 'image/png';
+  } else if (request === '.jpeg' || request === '.jpg') {
+    return 'image/jpeg';
+  } else if (request === 'webp') {
+    return 'image/webp';
+  } else if (request === 'gif') {
+    return 'image/gif';
   }
 }
 
@@ -49,23 +72,28 @@ module.exports = async (req, res) => {
     if (!fragment) {
       res.status(404).json(createErrorResponse(404, 'Fragment not found'));
     } else {
-      //set res headers
-      logger.debug('Set header 1');
-      res.setHeader('Content-Type', fragment.type);
-      logger.debug('after Set header 1');
-
+      let fType = fragment.type;
+      let fSize = fragment.size;
       logger.debug('Before get data');
       let fData = await fragment.getData();
       logger.debug({ fData }, 'After get data');
 
       if (ext) {
-        logger.info({ fData }, 'BEFORE CONVERT');
-        fData = await fragment.convertData(fData, ext, fragment);
-        logger.info({ fData }, 'AFTER CONVERT');
+        //check if conversion is valid
+        if (Fragment.canConvert(fType, ext)) {
+          //then convert
+          logger.info({ fData }, 'BEFORE CONVERT');
+          fData = await fragment.convertData(fData, ext, fragment);
+          logger.info({ fData }, 'AFTER CONVERT');
+          fType = mime(ext);
+        } else {
+          logger.debug('invalid conversion');
+          return res.status(415).json(createErrorResponse(415, 'Invalid conversion'));
+        }
       }
 
-      res.setHeader('Content-Length', fragment.size);
-
+      res.setHeader('Content-Length', fSize);
+      res.setHeader('Content-Type', fType);
       res.status(200).send(fData);
     }
   } catch (error) {

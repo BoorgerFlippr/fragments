@@ -2,7 +2,8 @@
 
 const { randomUUID } = require('crypto');
 const contentType = require('content-type');
-var md = require('markdown-it')();
+const md = require('markdown-it')();
+const sharp = require('sharp');
 
 // Functions for working with fragment metadata/data using our DB
 const {
@@ -15,7 +16,27 @@ const {
 } = require('./data');
 const logger = require('../logger');
 
-const validTypes = [`text/plain`, `text/markdown`, `text/html`, `application/json`];
+const validTypes = [
+  `text/plain`,
+  `text/markdown`,
+  `text/html`,
+  `application/json`,
+  `image/png`,
+  `image/jpeg`,
+  `image/webp`,
+  `image/gif`,
+];
+
+const validConversions = {
+  'text/plain': ['.txt', '.html', '.md', '.json'],
+  'text/markdown': ['.md', '.html', '.txt'],
+  'text/html': ['.html', '.txt'],
+  'application/json': ['.json', '.txt'],
+  'image/png': ['.png', '.jpg', '.webp', '.gif'],
+  'image/jpeg': ['.png', '.jpg', '.webp', '.gif'],
+  'image/webp': ['.png', '.jpg', '.webp', '.gif'],
+  'image/gif': ['.png', '.jpg', '.webp', '.gif'],
+};
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
     if (id) {
@@ -176,28 +197,34 @@ class Fragment {
     return validTypes.includes(contentType.parse(value).type);
   }
 
+  static canConvert(type, ext) {
+    logger.debug(`trying to convert ${ext} into ${type}`);
+    const list = validConversions[type];
+    return list.includes(ext);
+  }
+
   async convertData(buffer, ext, fragment) {
     logger.debug('in convert function');
-    let data;
+    let convertedData;
+    const data = buffer;
 
-    //convert to html
-    if (ext === 'html' && fragment.mimeType.startsWith('text/')) {
-      logger.debug('inside if function');
-
-      data = buffer;
-      logger.debug({ data }, 'buffer stored in data');
-
-      logger.debug({ data }, 'before md render');
-
-      try {
-        data = md.render(data.toString('utf-8'));
-        logger.debug({ data }, 'after md render');
-      } catch (error) {
-        logger.error(error);
-      }
+    if (ext === '.html' && fragment.mimeType == 'text/markdown') {
+      convertedData = md.render(data.toString('utf-8'));
+    } else if (ext === '.json') {
+      convertedData = JSON.stringify(data);
+    } else if (ext === '.png') {
+      convertedData = await sharp(data).png().toBuffer();
+    } else if (ext === '.jpeg' || ext === '.jpg') {
+      convertedData = await sharp(data).jpeg().toBuffer();
+    } else if (ext === '.webp') {
+      convertedData = await sharp(data).webp().toBuffer();
+    } else if (ext === '.gif') {
+      convertedData = await sharp(data).gif().toBuffer();
+    } else {
+      convertedData = data.toString();
     }
 
-    return data;
+    return convertedData;
   }
 }
 

@@ -37,4 +37,22 @@ describe('GET /fragments/:ID', () => {
     expect(res.statusCode).toBe(200);
     logger.debug({ res }, 'TEST RESPONSE');
   });
+
+  test('Text fragment can not convert to image', async () => {
+    const res = await request(app)
+      .get(`/v1/fragments/${fragmentData}.png`)
+      .auth('user1@email.com', 'password1');
+
+    expect(res.statusCode).toBe(415);
+    logger.debug({ res }, 'TEST RESPONSE(img)');
+  });
+
+  test('Text fragment can do a valid conversion', async () => {
+    const res = await request(app)
+      .get(`/v1/fragments/${fragmentData}.json`)
+      .auth('user1@email.com', 'password1');
+
+    expect(res.statusCode).toBe(200);
+    logger.debug({ res }, 'TEST RESPONSE');
+  });
 });
