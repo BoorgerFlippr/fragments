@@ -3,7 +3,7 @@ const { createSuccessResponse, createErrorResponse } = require('../../../src/res
 const logger = require('../../logger');
 
 module.exports = async (req, res) => {
-  logger.error('in put route function');
+  logger.error('in put rout function');
 
   try {
     logger.error('check if content type is present');
