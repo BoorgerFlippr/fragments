@@ -29,6 +29,15 @@ describe('GET /fragments/:ID', () => {
     logger.debug({ res }, 'TEST RESPONSE');
   });
 
+  test('Bad request returns a 404', async () => {
+    const res = await request(app)
+      .get(`/v1/fragments${fragmentData}`)
+      .auth('user1@email.com', 'password1');
+
+    expect(res.statusCode).toBe(404);
+    logger.debug({ res }, 'TEST RESPONSE');
+  });
+
   test('Fragments get converted into html', async () => {
     const res = await request(app)
       .get(`/v1/fragments/${fragmentData}.html`)
